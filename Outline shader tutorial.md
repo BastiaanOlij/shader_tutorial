@@ -1,18 +1,21 @@
-Shader tutorial video 2d/3d
-===========================
+# Shader tutorial video 2d/3d
 
-Just dumping my ideas down for this. May or may not be useful. 
+Just dumping my ideas down for this. May or may not be useful. The idea was to do a shader co-op tutorial first explaining how 2d shaders work, and then apply similar techniques for a 3d shader. We've decided to look into distortion shaders as these are fairly simple and good beginner shaders.
 
-Introduction
-------------
+The plan is for you to do the 2d shader video, I will do the 3d shader video. I however have taken the liberty to do my take on the full shader tutorial mainly just to get my ideas down on paper but also so we just have a start. Feel free to use whatever you think you can use and ignore whatever it is you would do a different take on.
+
+## Introduction
+
+First part of the introduction, I'll leave up to you to fill in, welcome to this coop tutorial, this is the first part and we'll focus on 2d shaders, the second part will be by Bastiaan Olij and focus on the 3d counter parts of these shaders, yada yada yada...
 
 What are shaders? Explain regardless of 2d or 3d we render (i.e. draw) polygons, to be exact, we render triangles.
 In 2D in most cases everything you see is made up of quads so we end up rendering two triangles. There are other things but quads are our bread and butter and in the end they are all variations of the same theme.
 In 3D we render more complex shapes but all are brought back to rendering triangles on screen.
-For now we stick with 3D
+For now we stick with 2D
 
-Shaders
--------
+*Note* Before we begin, all textures must be set to being repeatable textures! Edit the import settings for this, maybe also highlight this in the video. 
+
+## 2D Shaders
 Shaders are small programs running on your graphics card that do the actual work involved in drawing these triangles.
 The parts that are exposed to you, the programmer, are only smaller parts of the shader program. Most of the logic is performed by the hardware and it calls your logic to fill in the blanks.
 Traditionally we deal with two shaders the hardware requires us to implement namely the vertex shader and the fragment shader.
@@ -27,8 +30,7 @@ The lighting shader is then run for each light that illuminates our pixel to det
 
 Writing your own lighting shader is an advanced topic and we won't be covering it in these videos. The default logic Godot executes will suffice in nearly all scenarios. It is only when you want to do things like cartoon shaders that writing your own lighting shader becomes important.
 
-Our first shader
-----------------
+## Our first shader
 Lets start with doing a little bit of setup, we add a TextureRect to our screen and we assign a texture to our TextureRect. We'll assign our Godot icon to this for now.
 Our rectangle is already being rendered by a shader but it is using Godots build in shader. This is already a very capable shader that will do many things for you. You have more customisation options with this shader by creating a CanvasItemMaterial and using that for our rectangle and just playing around with the settings that offers you.
 
@@ -114,12 +116,10 @@ On our sliders signal we change the x component of our variable and assign our s
 
 See if you can add sliders for the other 3 variables.
 
-Our second shader
------------------
-Lets start looking at fragment shaders and for this we're going to start with a new scene. We are again going to add a rectangle but this time we use a ColorRect. We'll use the layout options to make this full screen.
-Now we could use a TextureRect here too and that would remove a step from what we're about to do but that would mean I can't show that step and it's imported for more complex shaders.
+## Our second shader
+Lets start looking at fragment shaders and for this we're going to start with a new scene. We are again going to add a rectangle but this time we use a Sprite just to show another option for this.
 
-Lets again add a ShaderMaterial to our rectangle and create a new shader.
+Lets again add a ShaderMaterial to our Sprite and create a new shader, exactly the same as before.
 
 ```
 shader_type canvas_item;
@@ -132,116 +132,188 @@ void fragment() {
 This is the simplest fragment shader we can have, just like our vertex shader it is implemented as a function. We are assigning a single build in variable called COLOR and that determines what color our pixel is rendered at. Lighting will be applied afterwards which may make this a lighter or darker tint but as we don't have any lighting in our scene we get the color as is.
 Colors are stored as vec4s, the components are respectively red, green, blue and alpha and each should be a value between 0 (dark) and 1 (light). The alpha determines the transparency of our fragment.
 
-We don't want a single color here so lets add in some texture mapping and recreate the functionality of our TextureRect.
+We don't want a single color here so we are going to apply a texture, note that the change we're making to our fragment shader makes it work exactly like the build in one..
 ```
 shader_type canvas_item;
 
-uniform sampler2D our_texture: hint_albedo;
-
 void fragment() {
-  COLOR = texture(our_texture, UV);
+  COLOR = texture(TEXTURE, UV);
 }
 ```
-Again we've defined a uniform allowing us to supply our shader with a value. The type we use is sampler2D which tells Godot that we want to use a texture.
-The text after the semicolon is called a hint and is optional. This gives Godot a little bit more knowledge about the type of texture we want, whether it is used for colors or a normal map or something else.
-We now need to assign our texture, we find our new uniform listed in our new material under the shader param group. We'll use our good old Godot icon again (maybe should find a nice tileable alternative).
+We now need to assign our texture. We'll use our good old Godot icon again.
 
-And there we go, our texture is visible nicely stretched out. When you look at our color assignment you see a new function called called texture, it looks up the color within our texture at a specific location. 
-The first parameter is our texture but our second is another build in variable called UV. UV is a vector that automatically interpolates from 0,0 in the top left corner to 1,1 in the bottom right corner of our rectangle.
+We're introduced to 3 new things here.
+The first is the function texture, note the lower case, which does a lookup for a pixel in our texture.
+The second is the build in variable TEXTURE, note the upper case, which is the texture assigned to our sprite.
+The third is a build in variable UV, again note the upper case, which gives us our default texture coordinate for this fragment.
+
+The UV is automatically interpolated from 0,0 in the top left corner to 1,1 in the bottom right corner of our sprite.
 Note that coordinates in our texture lookup always run from 0,0 and 1,1, they are not pixel coordinates on the texture but are normalised. This often trips up people but in many cases it makes life a lot easier.
 
 Lets add a bit of tiling, we first have to change the import properties of our texture to allow it to repeat and then change our code to: 
 ```
 shader_type canvas_item;
 
-uniform sampler2D our_texture: hint_albedo;
 uniform float tile_factor = 10.0;
 
 void fragment() {
-  COLOR = texture(our_texture, UV * tile_factor);
+  COLOR = texture(TEXTURE, UV * tile_factor);
 }
 ```
-Now we have 10 godot faces horizontally, and 10 vertically. Again we've used a uniform here so we can change
+Now we have 10 godot faces horizontally, and 10 vertically. We're again using a uniform here so we can change the value from GDScript.
 
-But they do look a little flat. That is because our rectangle isn't as high as it is wide. Lets fix that:
+But they do look a little squished. That is because our rectangle isn't as high as it is wide. Lets fix that:
 ```
 shader_type canvas_item;
 
-uniform sampler2D our_texture: hint_albedo;
 uniform float tile_factor = 10.0;
+uniform float aspect_ratio = 0.5;
 
 void fragment() {
   vec2 adjusted_uv = UV * tile_factor;
-  adjusted_uv.y *= SCREEN_PIXEL_SIZE.x / SCREEN_PIXEL_SIZE.y;
+  adjusted_uv.y *= aspect_ratio;
   
-  COLOR = texture(our_texture, adjusted_uv);
+  COLOR = texture(TEXTURE, adjusted_uv);
 }
 ```
 
-Now in our preview in the editor this will still look wrong because our rectangle probably doesn't match our viewport size, but if you run the project you will see it is correct.
-We've made two changes in our code. The first is that we've defined a local variable called adjusted_uv which we default to 10 times our UV value.
-The second is that we multiply the Y of our new UV with the aspect ratio of the screen. This is another build in variable we have access to that gives us the size our our current screen. Well actually its the size of our viewport but they are usually synonimous.
+Unfortunately we do not know the size of our rectangle nor that of our texture inside of our shader. This is not exposed through build in variables. What we need to know to correctly size our tiles is the aspect ratio of our texture. We'll need to calculate this in GDScript so we declare this as a uniform variable.
+
+We've also defined a local variable called adjusted_uv which we default to 10 times our UV value.
+Then we multiply the Y of our new UV with the aspect ratio. 
+
+Now all we need to do is set our aspect ratio to the correct value so we add a GDScript to our Sprite node and add the following code:
+```
+func _ready():
+  material.set_shader_param("aspect_ratio", scale.y/scale.x)
+```
+Because of the way Sprites work in Godot the size of our rectangle is always a multiple of the size of the texture we use and that multiple is defined by the scale. Therefor our aspect ratio is simply the y of our scale divided by the x of our scale.
+
+One thing that is important to remember is that we set our uniform on our material and it is therefor applied to any object on screen that shares the same material. If you want to reuse the same shader on various objects that all need to have different values for the shader parameters, make sure to create a new material on that object and assign the same shader to that material.
 
 Finally lets see if we can combine what we've learned in the vertex shader with using our sine and cosine function, with our new fragment shader:
 ```
 shader_type canvas_item;
 
-uniform sampler2D our_texture: hint_albedo;
 uniform float tile_factor = 10.0;
+uniform float aspect_ratio = 0.5;
+
 uniform vec2 time_factor = vec2(2.0, 3.0);
 uniform vec2 offset_factor = vec2(5.0, 2.0);
 uniform vec2 amplitude = vec2(0.05, 0.05);
 
 void fragment() {
   vec2 adjusted_uv = UV * tile_factor;
-  adjusted_uv.y *= SCREEN_PIXEL_SIZE.x / SCREEN_PIXEL_SIZE.y;
+  adjusted_uv.y *= aspect_ratio;
   
   adjusted_uv.x += sin(TIME * time_factor.x + (adjusted_uv.x + adjusted_uv.y) * offset_factor.x) * amplitude.x;
   adjusted_uv.y += cos(TIME * time_factor.y + (adjusted_uv.x + adjusted_uv.y) * offset_factor.y) * amplitude.y;
   
-  COLOR = texture(our_texture, adjusted_uv);
+  COLOR = texture(TEXTURE, adjusted_uv);
 }
 ```
 
 You could now add sliders to our UI just like with our previous example to play around with the values and see what they all do but as we've already shown that off, we'll move on.
 
-What we're still missing is our lighting, now as we said before we aren't going to implement a lighting shader but the standard lighting shader still needs something extra for this to work.
+### Changing over to a DuDv map
+Using sine and cosines for our distortion is all well and good but especially over larger areas it can become pretty repetative. You can always add different octaves of sines with different offsets to create some more interesting ripples. What we'll do here however is use a special texture map called a DuDv map, or delta U, delta V map. This is a texture map where the red and green color channels hold an offset for our UV.
 
-Lets add a 2d light to our scene and use a very simple texture for our light, make sure to set the height property of the light.
-You can see that it does someting with the light, to be very honest, I'm not sure what the default logic is doing here. (Need to investigate this further before recording our tutorial)
-
-The full calculation for lighting especially with complex materials would take a video in itself to explain but at the root of all lighting techniques is a deceptively simple principle. The angle at which light hits the surface determines how brightly it is illuminated. If light hits the surface straight on, the direction of the light is perpendicular to the surface, then we illuminate the surface at maximum brightness. If the light travels parallel to the surface, or comes from behind the surface, then there is no illumination of the surface.
-To check the angle at which the light hits the surface we need to know the normal of that surface. The normal of the surface is a vector that points away from the surface. Lighting by its nature is a 3D process not a 2D process, for lighting in a 2D game we're pretending our lights are a certain distance above the 2D surface and most of our normals will thus always point upwards.
-We can use normal map textures with our 2D object to simulate texture in our material and have the light show this.
-
-But for our effect, we're going to calculate a normal and for this we assign another output called NORMAL:
+Let's see what our fragment shader looks like now:
 ```
 shader_type canvas_item;
 
-uniform sampler2D our_texture: hint_albedo;
 uniform float tile_factor = 10.0;
-uniform vec2 time_factor = vec2(2.0, 3.0);
-uniform vec2 offset_factor = vec2(5.0, 2.0);
-uniform vec2 amplitude = vec2(0.05, 0.05);
+uniform float aspect_ratio = 0.5;
+
+uniform sampler2D DuDvMap : hint_black;
+uniform vec2 time_factor = vec2(0.05, 0.08);
+uniform vec2 DuDvFactor = vec2(0.2, 0.2);
+uniform float DuDvAmplitude = 0.1;
 
 void fragment() {
-  vec2 adjusted_uv = UV * tile_factor;
-  adjusted_uv.y *= SCREEN_PIXEL_SIZE.x / SCREEN_PIXEL_SIZE.y;
+  vec2 DuDv_UV = UV * DuDvFactor; // Determine the UV that we use to look up our DuDv
+  DuDv_UV += TIME * time_factor; // add some animation
   
-  vec2 offset = vec2(sin(TIME * time_factor.x + (adjusted_uv.x + adjusted_uv.y) * offset_factor.x) * amplitude.x, cos(TIME * time_factor.y + (adjusted_uv.x + adjusted_uv.y) * offset_factor.y) * amplitude.y);
-  adjusted_uv.x += offset.x;
-  adjusted_uv.y += offset.y;
+  vec2 offset = texture(DuDvMap, DuDv_UV).rg; // Get our offset
+  offset = offset * 2.0 - 1.0; // Convert from 0.0 <=> 1.0 to -1.0 <=> 1.0
+  offset *= DuDvAmplitude; // And apply our amplitude
   
-  COLOR = texture(our_texture, adjusted_uv);
+  vec2 adjusted_uv = UV * tile_factor; // Determine the UV for our texture lookup
+  adjusted_uv.y *= aspect_ratio; // Apply aspect ratio
+  adjusted_uv += offset; // Distort using our DuDv offset
   
-  vec3 tangent = normalize(vec3(amplitude.x, 0.0, -offset.x));
-  vec3 bitangent = normalize(vec3(0.0, amplitude.y, -offset.y));
-  
-  NORMAL = normalize(cross(tangent, bitangent));
+  COLOR = texture(TEXTURE, adjusted_uv); // And lookup our color
 }
 ```
-We've stored the offset that we're using to change the lookup in our texture into a variable so we can reuse it. It's a bit of a trick but we're using our offsets as a gradient, imagine our surface is actually a wave, we're creating two vectors that are flush with the surface of the wave, one in the X direction, one in the Y direction (Z in our case is up), also called the tangent and bitangent vectors of our surface. We have to normalise these vectors, this function will ensure the length of the vectors equal 1 which is incredibly important with many calculations.
-Then we simply perform a function called the cross. This function does a nifty multiplication between the two vectors that gives you a new vector that is perpendicular to the plane the other two vectors are in, provided all vectors are unit vectors. And, tada, this is the normal of the surface of our water.
+The one thing we've not done before is using a uniform to allow us to use a second texture in our shader. The line that lets us do this is ```uniform sampler2D DuDvMap : hint_black```.
+As before this is defined as a uniform so we can set it outside of our shaders.
+It is declared as a sampler2D which basically translates to, this is a texture.
+We've given it a name, DuDvMap.
+And finally we have something new, we've given it a hint. This tells Godot something about the texture. In our case we give it a *hint_black* which roughly translates to us wanting the color black if no texture is given.
+
+We now need to go to our material properties and assign a texture to our new DuDvMap and as soon as we do, we see a far nicer water ripple distortion then our sines gave.
+
+But how does this work? Well at the top we start by calculating the UV with which we want to look up an entry in the DuDvMap. We multiply this by a factor and as our DuDv map is a bit larger then our Sprite we're scaling it down.
+We then add our TIME offset to animate our water and again we multiply this by a factor which effects the speed of our animation.
+
+Now we can load the value from our DuDvMap but we only need the red and green colors, hence the .rg we've added to our texture lookup.
+Our red and green values will be a value between 0 and 1, but we want a value between -1 and 1. The times 2 minus 1 calculation is one you will often see in shaders as this is a very common conversion.
+
+Finally we multiply our offset by an amplitude as we only want to offset our value slightly.
+Instead of adding our sine and cosine values we replace that code by simply adding the offset.
+
+And that is all.
+
+### Perfecting the lighting
+What we're still missing is our lighting, now as we said before we aren't going to implement a lighting shader but the standard lighting shader still needs something extra for this to work.
+
+Lets add a 2d light to our scene and use a very simple texture for our light, make sure to set the height property of the light.
+The light just illuminates our Sprite asif it is a flat rectangle. It has no idea that we are distorting the texture to create the illusion of ripples in the water. We need to tell it that our rectangle is no longer flat.
+
+The full calculation for lighting especially with complex materials would take a video in itself to explain but at the root of all lighting techniques is a deceptively simple principle. The angle at which light hits the surface determines how brightly it is illuminated. If light hits the surface straight on, the direction of the light is perpendicular to the surface, then we illuminate the surface at maximum brightness. If the light travels parallel to the surface, or comes from behind the surface, then there is no illumination of the surface.
+
+We thus need to inform our lighting shader of the orientation of our fragment and we do this by supplying it with the normal vector of our fragment. A normal vector is a vector that points straight out of our surface.
+
+We can calculate our normal vector from our DuDv map but lucky for us this has already been done and the result stored in a normal map. A normal map is simply a texture that stores normal vectors for a surface.
+
+Normal maps are widely used to add texture to our textures and we can see that our Sprite has support for normal maps so we start by assigning our normal map to our normal map property.
+
+Now we can see that our normal map has indeed had an effect on our lighting, just not the effect we were hoping for. The normal map Godot was expecting was one that matched our Godot texture but we're using it very differently. Luckily a very simple change to our fragment shader can rectify the problem.
+
+```
+shader_type canvas_item;
+
+uniform float tile_factor = 10.0;
+uniform float aspect_ratio = 0.5;
+
+uniform sampler2D DuDvMap : hint_black;
+uniform vec2 time_factor = vec2(0.05, 0.08);
+uniform vec2 DuDvFactor = vec2(0.2, 0.2);
+uniform float DuDvAmplitude = 0.1;
+
+void fragment() {
+  vec2 DuDv_UV = UV * DuDvFactor; // Determine the UV that we use to look up our DuDv
+  DuDv_UV += TIME * time_factor; // add some animation
+  
+  vec2 offset = texture(DuDvMap, DuDv_UV).rg; // Get our offset
+  offset = offset * 2.0 - 1.0; // Convert from 0.0 <=> 1.0 to -1.0 <=> 1.0
+  offset *= DuDvAmplitude; // And apply our amplitude
+  
+  vec2 adjusted_uv = UV * tile_factor; // Determine the UV for our texture lookup
+  adjusted_uv.y *= aspect_ratio; // Apply aspect ratio
+  adjusted_uv += offset; // Distort using our DuDv offset
+  
+  COLOR = texture(TEXTURE, adjusted_uv); // And lookup our color
+  NORMALMAP = texture(NORMAL_TEXTURE, DuDv_UV).rgb;
+}
+```
+
+We just needed to add one line where we lookup the value in from NORMAL_TEXTURE using the same UV as our DuDvMap lookup, and assign that to a special build in output called NORMALMAP.
+Now the effect is a little hard to see because our texture is already relatively bright but if you comment out the COLOR line and replace is with:
+```
+COLOR = vec4(0.3, 0.3, 0.3, 1.0);
+```
+Using a single color for our output really shows how the light gets rippled in sync with our distortion.
 
 Making the jump to 3D
 ---------------------
@@ -252,6 +324,8 @@ to be continued....
 
 
 
+Again we've defined a uniform allowing us to supply our shader with a value. The type we use is sampler2D which tells Godot that we want to use a texture.
+The text after the semicolon is called a hint and is optional. This gives Godot a little bit more knowledge about the type of texture we want, whether it is used for colors or a normal map or something else.
 
 
 

@@ -1,14 +1,18 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://interface/amplitude_controller/AmplitudeController.tscn" type="PackedScene" id=1]
 [ext_resource path="res://shaders/dancing_godot/DancingGodot.tscn" type="PackedScene" id=2]
 [ext_resource path="res://shaders/water/Water.tscn" type="PackedScene" id=3]
+[ext_resource path="res://shaders/water/Water.gd" type="Script" id=4]
+[ext_resource path="res://shaders/water/water_dudv_material.tres" type="Material" id=5]
+[ext_resource path="res://shaders/water/water_lighting_material.tres" type="Material" id=6]
+[ext_resource path="res://shaders/water/waterNormal.png" type="Texture" id=7]
+[ext_resource path="res://light.png" type="Texture" id=8]
 
 [node name="Shaders" type="Node" index="0"]
 
 [node name="Interface" type="Control" parent="." index="0"]
 
-editor/display_folded = true
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
@@ -34,10 +38,58 @@ margin_top = 16.0
 margin_right = 144.0
 margin_bottom = 144.0
 
-[node name="Water" parent="." index="2" instance=ExtResource( 3 )]
+[node name="Water_sine" parent="." index="2" instance=ExtResource( 3 )]
 
-position = Vector2( 544, 208 )
-scale = Vector2( 5.05263, 3 )
+position = Vector2( 192, 16 )
+scale = Vector2( 3, 1.5 )
+centered = false
+script = ExtResource( 4 )
+_sections_unfolded = [ "Animation", "Material", "Offset", "Region", "Transform", "Z Index" ]
+
+[node name="Water_DuDv" parent="." index="3" instance=ExtResource( 3 )]
+
+material = ExtResource( 5 )
+position = Vector2( 592, 16 )
+scale = Vector2( 3, 1.5 )
+centered = false
+script = ExtResource( 4 )
+_sections_unfolded = [ "Animation", "Material", "Offset", "Region", "Transform", "Z Index" ]
+
+[node name="Water_Lighting" parent="." index="4" instance=ExtResource( 3 )]
+
+material = ExtResource( 6 )
+position = Vector2( 192, 216 )
+scale = Vector2( 3, 1.5 )
+normal_map = ExtResource( 7 )
+centered = false
+script = ExtResource( 4 )
+_sections_unfolded = [ "Animation", "Material", "Offset", "Region", "Transform", "Z Index" ]
+
+[node name="Light2D" type="Light2D" parent="." index="5"]
+
+position = Vector2( 483.253, 346.423 )
+enabled = true
+editor_only = false
+texture = ExtResource( 8 )
+offset = Vector2( 0, 0 )
+texture_scale = 1.0
+color = Color( 1, 1, 1, 1 )
+energy = 1.0
+mode = 0
+range_height = 50.0
+range_z_min = -1024
+range_z_max = 1024
+range_layer_min = 0
+range_layer_max = 0
+range_item_cull_mask = 1
+shadow_enabled = false
+shadow_color = Color( 0, 0, 0, 0 )
+shadow_buffer_size = 2048
+shadow_gradient_length = 0.0
+shadow_filter = 0
+shadow_filter_smooth = 0.0
+shadow_item_cull_mask = 1
+_sections_unfolded = [ "Material", "Range" ]
 
 [connection signal="amplitude_changed" from="Interface/AmplitudeController" to="DancingGodot" method="_on_AmplitudeController_amplitude_changed"]
 
