@@ -1,10 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=3 format=2]
-
-[ext_resource path="res://shaders/water/waterDUDV.png" type="Texture" id=1]
-
-[sub_resource type="Shader" id=1]
-
-code = "shader_type canvas_item;
+shader_type canvas_item;
 
 uniform float tile_factor = 10.0;
 uniform float aspect_ratio = 0.5;
@@ -27,17 +21,5 @@ void fragment() {
 	adjusted_uv += offset; // Distort using our DuDv offset
 	
 	COLOR = texture(TEXTURE, adjusted_uv); // And lookup our color
-}"
-
-[resource]
-
-render_priority = 0
-shader = SubResource( 1 )
-shader_param/tile_factor = null
-shader_param/aspect_ratio = null
-shader_param/time_factor = null
-shader_param/DuDvFactor = null
-shader_param/DuDvAmplitude = null
-shader_param/DuDvMap = ExtResource( 1 )
-_sections_unfolded = [ "shader_param" ]
-
+	NORMALMAP = texture(NORMAL_TEXTURE, DuDv_UV).rgb;
+}
