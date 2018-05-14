@@ -1,0 +1,15 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[ext_resource path="res://shaders/water/sine/water_sine.shader" type="Shader" id=1]
+
+[resource]
+
+render_priority = 0
+shader = ExtResource( 1 )
+shader_param/tile_factor = null
+shader_param/aspect_ratio = null
+shader_param/time_factor = Vector2( 0.2, 0.4 )
+shader_param/offset_factor = null
+shader_param/amplitude = null
+_sections_unfolded = [ "shader_param" ]
+

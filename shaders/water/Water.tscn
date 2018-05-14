@@ -1,14 +1,17 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://shaders/water/water_sine_material.tres" type="Material" id=1]
-[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://shaders/water/uv_texture_offset/water_texture_offset_material.tres" type="Material" id=1]
+[ext_resource path="res://shaders/water/textures/water_diffuse.png" type="Texture" id=2]
+
+
+
 
 
 
 [node name="Water" type="Sprite" index="0"]
 
 material = ExtResource( 1 )
-position = Vector2( 512, 304 )
+position = Vector2( 528, 304 )
 scale = Vector2( 8, 4.75 )
 texture = ExtResource( 2 )
 _sections_unfolded = [ "Material" ]
