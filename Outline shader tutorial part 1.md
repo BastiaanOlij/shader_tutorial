@@ -315,17 +315,8 @@ COLOR = vec4(0.3, 0.3, 0.3, 1.0);
 ```
 Using a single color for our output really shows how the light gets rippled in sync with our distortion.
 
-Making the jump to 3D
----------------------
-to be continued....
 
 
-
-
-
-
-Again we've defined a uniform allowing us to supply our shader with a value. The type we use is sampler2D which tells Godot that we want to use a texture.
-The text after the semicolon is called a hint and is optional. This gives Godot a little bit more knowledge about the type of texture we want, whether it is used for colors or a normal map or something else.
 
 
 
