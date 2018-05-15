@@ -2,25 +2,23 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/water_uv_offset.png-b30639fd1b1bfb9f39d0c00e524c08bf.stex"
+path.s3tc="res://.import/water_uv_offset.png-b30639fd1b1bfb9f39d0c00e524c08bf.s3tc.stex"
+path.etc2="res://.import/water_uv_offset.png-b30639fd1b1bfb9f39d0c00e524c08bf.etc2.stex"
 
 [deps]
 
 source_file="res://shaders/water_3d/textures/water_uv_offset.png"
-source_md5="90b43e2113aecd212e6e7f3a0422a125"
-
-dest_files=[ "res://.import/water_uv_offset.png-b30639fd1b1bfb9f39d0c00e524c08bf.stex" ]
-dest_md5="1befd4c46d95a9935899e8c15ce453cd"
+dest_files=[ "res://.import/water_uv_offset.png-b30639fd1b1bfb9f39d0c00e524c08bf.s3tc.stex", "res://.import/water_uv_offset.png-b30639fd1b1bfb9f39d0c00e524c08bf.etc2.stex" ]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/normal_map=0
-flags/repeat=0
+flags/repeat=true
 flags/filter=true
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true
@@ -28,5 +26,5 @@ process/premult_alpha=false
 process/HDR_as_SRGB=false
 stream=false
 size_limit=0
-detect_3d=true
+detect_3d=false
 svg/scale=1.0

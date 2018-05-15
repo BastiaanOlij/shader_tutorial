@@ -172,7 +172,111 @@ void fragment() {
 }
 ```
 
-Now it's time to make our water look a little less repetative.
-*to be continued*
+Now it's time to make our water look a little less repetative. We're going to do this in the same way as Nathan did in the 2D shader by using an offset texture.
+We will use the offset texture to apply an offset to our diffuse texture lookup.
+
+We need to add the uniform into our shader for our offset texture so we can change the scale, speed of the animation and how strongly our offsets are applied.
+```
+uniform sampler2D uv_offset_texture : hint_black;
+uniform vec2 uv_offset_scale = vec2(0.2, 0.2);
+uniform float uv_offset_time_scale = 0.05;
+uniform float uv_offset_amplitude = 0.2;
+```
+We also need to set our offset texture in the material.
+
+Then in our fragment shader we calculate the uv with which we:
+- lookup our offsets
+- adjust them so instead of being values from 0 to 1, they become a value between -1 and 1
+- store our current texture uv calculation into a variable
+- and add our offset to our texture uv
+
+```
+void fragment() {
+	vec2 base_uv_offset = UV * uv_offset_scale; // Determine the UV that we use to look up our DuDv
+	base_uv_offset += TIME * uv_offset_time_scale;
+	
+	vec2 texture_based_offset = texture(uv_offset_texture, base_uv_offset).rg; // Get our offset
+	texture_based_offset = texture_based_offset * 2.0 - 1.0; // Convert from 0.0 <=> 1.0 to -1.0 <=> 1.0
+	
+	vec2 texture_uv = UV * texture_scale;
+	texture_uv += uv_offset_amplitude * texture_based_offset;
+	ALBEDO = texture(texturemap, texture_uv).rgb;
+	if (ALBEDO.r > 0.9 && ALBEDO.g > 0.9 && ALBEDO.b > 0.9) {
+		ALPHA = 0.9;
+	} else {
+		ALPHA = 0.5;
+	}
+	METALLIC = 0.5;
+	ROUGHNESS = 0.2;
+}
+```
+
+Now we see that our water is nicely animated. 
+
+Our uv distortion however also means that our normals are no longer correct and again we use the exact same solution as with our 2D shader. We are going to add a normal map but there is an interesting difference. Our normal map works in conjunction with the normal of our plane. This is why it also was important that way in the beginning, we calculated our tangent and binormal values. 
+
+This is an easy change, first we add a uniform for our normal map
+```
+uniform sampler2D normalmap : hint_normal;
+```
+Note the hint_normal that tells Godot we are expecting a normal map, which we need to assign in our material.
+
+Then we simply add our lookup:
+```
+	NORMALMAP = texture(normalmap, base_uv_offset).rgb;
+```
+
+Now that makes a lot of difference!
+
+There is one more thing left to do, and this unfortunately is an advanced topic but it can't be avoided to complete the effect. You get this completely free when you use the build in Spatial Material. We're going to add in refraction. I'll try and explain exactly what each line in the shader does but for the most part, it's a matter of copy paste.
+We add this completely at the end of our fragment code.
+
+First we need to know the actual normal vector where our interpolated normal from our vertex function is combined with the normal from our normal map.
+```
+	vec3 ref_normal = normalize( mix(NORMAL,TANGENT * NORMALMAP.x + BINORMAL * NORMALMAP.y + NORMAL * NORMALMAP.z,NORMALMAP_DEPTH) );
+```
+I have no problem admitting I stole that line of code from Juan.
+
+Next we add a uniform for our refraction strength and offset our SCREEN_UV by our normal.
+```
+uniform float refraction = 0.05;
+...
+	vec2 ref_ofs = SCREEN_UV - ref_normal.xy * refraction;
+```
+The SCREEN_UV is a texture coordinate that is directly related to the pixel we're rendering on screen.
+
+We lookup the current color that we've rendered at this position using this coordinate and an inbuild texture called SCREEN_TEXTURE and apply a reverse alpha to it.
+```
+	EMISSION += textureLod(SCREEN_TEXTURE,ref_ofs,ROUGHNESS * 8.0).rgb * (1.0 - ALPHA);
+```
+
+Then we apply our ALPHA to our albedo.
+And finally we undo our ALPHA.
+```
+	ALBEDO *= ALPHA;
+	ALPHA = 1.0;
+```
+
+Now the tiles on the walls of our pool are nicely distorted along with the movement of the water.
+
+Before we end this a note of caution. When we use the SCREEN_TEXTURE in our shader it triggers special behaviour in Godot. Shaders that use the SCREEN_TEXTURE are rendered last, after everything else has been rendered on screen. The first material of this type that is rendered will cause Godot to make a copy of what was rendered so far into a texture and it is that texture that is used.
+
+*include this last bit, or leave it?*
+This also poses a problem for our refraction rendering, a problem that the default shader suffers as well. Traditionally refraction shaders require you to render your scene with only the geometry that is actually below the water. As we render geometry above the water the distortion can pick that up as well.
+
+Ok, that is far more information then you can chew on for one night. I hope you enjoyed these videos and learned enough about the basics of writing shaders in Godot.
+We'll probably do more videos diving into specific topics on how to create certain effects. If there is anything you want to know, leave us a comment and we'll do our best to answer or may use this as an input for our next tutorial.
+
+Please give us a like, see you next time!
+
+
+
+
+
+
+
+
+
+
 
 
