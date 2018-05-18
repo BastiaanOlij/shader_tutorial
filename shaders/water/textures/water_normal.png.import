@@ -7,7 +7,10 @@ path="res://.import/water_normal.png-d201baa7973ab4d4cb1cd2931b9fa447.stex"
 [deps]
 
 source_file="res://shaders/water/textures/water_normal.png"
+source_md5="d2c9dbd5b3d1a637a716cb3ef13aa567"
+
 dest_files=[ "res://.import/water_normal.png-d201baa7973ab4d4cb1cd2931b9fa447.stex" ]
+dest_md5="283c65f9e34ffc64f7f5a51e249ef40c"
 
 [params]
 

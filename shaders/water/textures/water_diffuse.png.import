@@ -7,14 +7,17 @@ path="res://.import/water_diffuse.png-d20aea5247409517e1eadf737d86bf67.stex"
 [deps]
 
 source_file="res://shaders/water/textures/water_diffuse.png"
+source_md5="d7db81488063140c0ef9db9d4efeeb62"
+
 dest_files=[ "res://.import/water_diffuse.png-d20aea5247409517e1eadf737d86bf67.stex" ]
+dest_md5="5fcc0dc9d2d29fec09050c7de6894272"
 
 [params]
 
 compress/mode=0
 compress/lossy_quality=0.7
 compress/hdr_mode=0
-compress/normal_map=0
+compress/normal_map=1
 flags/repeat=1
 flags/filter=true
 flags/mipmaps=false
