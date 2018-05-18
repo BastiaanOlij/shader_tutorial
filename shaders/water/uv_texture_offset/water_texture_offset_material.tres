@@ -27,6 +27,8 @@ void fragment() {
 	adjusted_uv += offset; // Distort using our DuDv offset
 	
 	COLOR = texture(TEXTURE, adjusted_uv); // And lookup our color
+//	COLOR = vec4(offset / DuDvAmplitude * tile_factor * aspect_ratio, vec2(0.0, 1.0));
+//	COLOR = DuDvMap;
 }"
 
 [resource]

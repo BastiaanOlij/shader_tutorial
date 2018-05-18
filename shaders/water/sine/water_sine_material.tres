@@ -8,8 +8,8 @@ render_priority = 0
 shader = ExtResource( 1 )
 shader_param/tile_factor = null
 shader_param/aspect_ratio = null
-shader_param/time_factor = Vector2( 0.2, 0.4 )
+shader_param/time_factor = Vector2( 0.6, 1 )
 shader_param/offset_factor = null
-shader_param/amplitude = null
+shader_param/amplitude = Vector2( 0.05, 0.1 )
 _sections_unfolded = [ "shader_param" ]
 

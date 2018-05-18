@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://shaders/water/with_shadow/water_material_2.tres" type="Material" id=1]
+[ext_resource path="res://shaders/water/textures/water_diffuse.png" type="Texture" id=2]
+
+[node name="WaterWithShadow" type="Sprite" index="0"]
+
+material = ExtResource( 1 )
+position = Vector2( 1344, 608 )
+scale = Vector2( 8, 4.75 )
+texture = ExtResource( 2 )
+_sections_unfolded = [ "Material", "Transform" ]
+
+
