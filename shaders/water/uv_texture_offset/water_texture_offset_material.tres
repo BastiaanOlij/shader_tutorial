@@ -6,40 +6,38 @@
 
 code = "shader_type canvas_item;
 
-uniform float tile_factor = 10.0;
+uniform float waves_tile_factor = 10.0;
 uniform float aspect_ratio = 0.5;
 
-uniform sampler2D DuDvMap : hint_black;
+uniform sampler2D offset_texture : hint_black;
 uniform vec2 time_factor = vec2(0.05, 0.08);
-uniform vec2 DuDvFactor = vec2(0.2, 0.2);
-uniform float DuDvAmplitude = 0.1;
+uniform vec2 offset_tile_factor = vec2(0.5, 0.2);
+uniform float amplitude = 0.1;
 
 void fragment() {
-	vec2 DuDv_UV = UV * DuDvFactor; // Determine the UV that we use to look up our DuDv
-	DuDv_UV += TIME * time_factor; // add some animation
+	vec2 offset_texture_uv = UV * offset_tile_factor;
+	vec2 panned_uvs = offset_texture_uv + TIME * time_factor;
 	
-	vec2 offset = texture(DuDvMap, DuDv_UV).rg; // Get our offset
-	offset = offset * 2.0 - 1.0; // Convert from 0.0 <=> 1.0 to -1.0 <=> 1.0
-	offset *= DuDvAmplitude; // And apply our amplitude
+	vec2 uv_offset = texture(offset_texture, panned_uvs).rg; // Get our offset
+	uv_offset = uv_offset * 2.0 - 1.0;
 	
-	vec2 adjusted_uv = UV * tile_factor; // Determine the UV for our texture lookup
-	adjusted_uv.y *= aspect_ratio; // Apply aspect ratio
-	adjusted_uv += offset; // Distort using our DuDv offset
+	vec2 adjusted_uv = UV * waves_tile_factor;
+	adjusted_uv.y *= aspect_ratio;
 	
-	COLOR = texture(TEXTURE, adjusted_uv); // And lookup our color
-//	COLOR = vec4(offset / DuDvAmplitude * tile_factor * aspect_ratio, vec2(0.0, 1.0));
-//	COLOR = DuDvMap;
+	COLOR = texture(TEXTURE, adjusted_uv + uv_offset * amplitude);
+//	COLOR = vec4(offset_texture_uv, vec2(0.0, 1.0));
+//	COLOR = vec4(uv_offset, vec2(0.0, 1.0));
 }"
 
 [resource]
 
 render_priority = 0
 shader = SubResource( 1 )
-shader_param/tile_factor = 8.0
+shader_param/waves_tile_factor = null
 shader_param/aspect_ratio = null
-shader_param/time_factor = Vector2( 0.02, 0.001 )
-shader_param/DuDvFactor = Vector2( 0.2, 0.2 )
-shader_param/DuDvAmplitude = 0.05
-shader_param/DuDvMap = ExtResource( 1 )
+shader_param/time_factor = Vector2( 0.02, 0.05 )
+shader_param/offset_tile_factor = null
+shader_param/amplitude = 0.02
+shader_param/offset_texture = ExtResource( 1 )
 _sections_unfolded = [ "shader_param" ]
 

@@ -8,11 +8,14 @@ uniform vec2 offset_factor = vec2(5.0, 2.0);
 uniform vec2 amplitude = vec2(0.05, 0.05);
 
 void fragment() {
-	vec2 adjusted_uv = UV * tile_factor;
-	adjusted_uv.y *= aspect_ratio;
+	vec2 tiled_uvs = UV * tile_factor;
+	tiled_uvs.y *= aspect_ratio;
 	
-	adjusted_uv.x += sin(TIME * time_factor.x + (adjusted_uv.x + adjusted_uv.y) * offset_factor.x) * amplitude.x;
-	adjusted_uv.y += cos(TIME * time_factor.y + (adjusted_uv.x + adjusted_uv.y) * offset_factor.y) * amplitude.y;
+//	vec2 wave_uv_offset = UV * tile_factor * aspect_ratio;
+	vec2 wave_uv_offset;
+	wave_uv_offset.x += sin(TIME * time_factor.x + (tiled_uvs.x + tiled_uvs.y) * offset_factor.x);
+	wave_uv_offset.y += cos(TIME * time_factor.y + (tiled_uvs.x + tiled_uvs.y) * offset_factor.y);
 	
-	COLOR = texture(TEXTURE, adjusted_uv);
+	COLOR = texture(TEXTURE, tiled_uvs + wave_uv_offset * amplitude);
+//	COLOR = vec4(wave_uv_offset, vec2(0.0, 1.0));
 }
