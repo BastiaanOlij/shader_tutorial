@@ -20,6 +20,4 @@ void fragment() {
 	vec2 wave_uv_offset = calculate_wave_uv_offset(TIME, tiled_uvs, time_factor, offset_factor);
 	
 	COLOR = texture(TEXTURE, tiled_uvs + wave_uv_offset * amplitude);
-//	Visualize the waves
-//	COLOR = vec4(wave_uv_offset, vec2(0.0, 1.0));
 }

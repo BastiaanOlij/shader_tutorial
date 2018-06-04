@@ -1,8 +1,9 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://interface/amplitude_controller/AmplitudeController.gd" type="Script" id=1]
+[ext_resource path="res://shaders/dancing_godot/interface/amplitude_controller/AmplitudeController.gd" type="Script" id=1]
 
-[node name="AmplitudeController" type="VBoxContainer"]
+
+[node name="AmplitudeController" type="VBoxContainer" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -59,7 +60,7 @@ min_value = 1.0
 max_value = 20.0
 step = 1.0
 page = 0.0
-value = 10.0
+value = 15.0
 exp_edit = false
 rounded = false
 editable = true

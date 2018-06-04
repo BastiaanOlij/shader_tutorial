@@ -1,8 +1,8 @@
+tool
 extends TextureRect
 
 onready var amplitude = material.get_shader_param("amplitude")
 func _ready():
-	# amplitude can be null if you didn't set a default value in the material
 	assert amplitude != null
 
 

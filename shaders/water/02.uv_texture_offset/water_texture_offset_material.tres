@@ -34,7 +34,7 @@ void fragment() {
 render_priority = 0
 shader = SubResource( 1 )
 shader_param/waves_tile_factor = null
-shader_param/aspect_ratio = null
+shader_param/aspect_ratio = 0.590908
 shader_param/time_factor = Vector2( 0.02, 0.05 )
 shader_param/offset_tile_factor = null
 shader_param/amplitude = 0.02
