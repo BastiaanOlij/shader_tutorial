@@ -6,7 +6,7 @@
 
 render_priority = 0
 shader = ExtResource( 1 )
-shader_param/time_factor = Vector2( 2, 2 )
-shader_param/amplitude = Vector2( 5, 5 )
+shader_param/time_factor = 2.0
+shader_param/amplitude = Vector2( 10, 10 )
 _sections_unfolded = [ "shader_param" ]
 

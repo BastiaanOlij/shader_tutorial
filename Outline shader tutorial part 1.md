@@ -13,7 +13,7 @@ In 2D in most cases everything you see is made up of quads so we end up renderin
 In 3D we render more complex shapes but all are brought back to rendering triangles on screen.
 For now we stick with 2D
 
-*Note* Before we begin, all textures must be set to being repeatable textures! Edit the import settings for this, maybe also highlight this in the video. 
+*Note* Before we begin, all textures must be set to being repeatable textures! Edit the import settings for this, maybe also highlight this in the video.
 
 ## 2D Shaders
 Shaders are small programs running on your graphics card that do the actual work involved in drawing these triangles.
@@ -39,9 +39,9 @@ But there comes a time that you'll want to do something unique and you will need
 When you create a new shader in Godot you actually start with a fully functional shader with all three parts implemented and here lies an important fact that sets Godot apart.
 Many other game engines will provide a default vertex and fragment shader but the moment you start implementing your own you'll loose much of the default logic.
 
-Godot will try to keep doing its default logic until you write something that replaces it. 
+Godot will try to keep doing its default logic until you write something that replaces it.
 
-In Godot 2, Godot had its own GLSL inspired shader language. In Godot 3 we are using GLSL syntax for our shaders but there are a few differences. 
+In Godot 2, Godot had its own GLSL inspired shader language. In Godot 3 we are using GLSL syntax for our shaders but there are a few differences.
 The main important difference is that we write the 3 parts of our shader, or atleast the parts we chose to implement, in a single file so they are named differently. The other difference is that Godot has its own build in variables that we will be manipulating. But other then that you are writing a GLSL shader and that means that many of the online resources that show you how to write GLSL shaders will help you writing Godot shaders.
 
 The first thing we need to do, and Godot already informs us of this, is tell Godot the type of shader we are writing. As we are creating a 2D shader, we need to create a canvas_item shader.
@@ -72,7 +72,7 @@ void vertex() {
 }
 ```
 
-By offsetting our sine and cosine function by values related to each individual vertex 
+By offsetting our sine and cosine function by values related to each individual vertex
 While not a very useful implementation it does show how easy it is to manipulate the vertices of our rectangle and end up with a dancing Godot.
 Finally on the subject of vertex shaders, the output position is still is "world" space, not the coordinates on screen. Those will be determined by Godot later on. You can override that behaviour but that is something for an advanced tutorial.
 
@@ -112,7 +112,7 @@ func _on_Amplitude_X_value_changed(value):
 ```
 
 In our ready function we'll get our starting value and populate our sliders value. Note that we can get a null value here when the defaults have not been changed.
-On our sliders signal we change the x component of our variable and assign our shader parameter. 
+On our sliders signal we change the x component of our variable and assign our shader parameter.
 
 See if you can add sliders for the other 3 variables.
 
@@ -150,7 +150,7 @@ The third is a build in variable UV, again note the upper case, which gives us o
 The UV is automatically interpolated from 0,0 in the top left corner to 1,1 in the bottom right corner of our sprite.
 Note that coordinates in our texture lookup always run from 0,0 and 1,1, they are not pixel coordinates on the texture but are normalised. This often trips up people but in many cases it makes life a lot easier.
 
-Lets add a bit of tiling, we first have to change the import properties of our texture to allow it to repeat and then change our code to: 
+Lets add a bit of tiling, we first have to change the import properties of our texture to allow it to repeat and then change our code to:
 ```
 shader_type canvas_item;
 
@@ -172,7 +172,7 @@ uniform float aspect_ratio = 0.5;
 void fragment() {
   vec2 adjusted_uv = UV * tile_factor;
   adjusted_uv.y *= aspect_ratio;
-  
+
   COLOR = texture(TEXTURE, adjusted_uv);
 }
 ```
@@ -180,7 +180,7 @@ void fragment() {
 Unfortunately we do not know the size of our rectangle nor that of our texture inside of our shader. This is not exposed through build in variables. What we need to know to correctly size our tiles is the aspect ratio of our texture. We'll need to calculate this in GDScript so we declare this as a uniform variable.
 
 We've also defined a local variable called adjusted_uv which we default to 10 times our UV value.
-Then we multiply the Y of our new UV with the aspect ratio. 
+Then we multiply the Y of our new UV with the aspect ratio.
 
 Now all we need to do is set our aspect ratio to the correct value so we add a GDScript to our Sprite node and add the following code:
 ```
@@ -205,10 +205,10 @@ uniform vec2 amplitude = vec2(0.05, 0.05);
 void fragment() {
   vec2 adjusted_uv = UV * tile_factor;
   adjusted_uv.y *= aspect_ratio;
-  
+
   adjusted_uv.x += sin(TIME * time_factor.x + (adjusted_uv.x + adjusted_uv.y) * offset_factor.x) * amplitude.x;
   adjusted_uv.y += cos(TIME * time_factor.y + (adjusted_uv.x + adjusted_uv.y) * offset_factor.y) * amplitude.y;
-  
+
   COLOR = texture(TEXTURE, adjusted_uv);
 }
 ```
@@ -233,15 +233,15 @@ uniform float DuDvAmplitude = 0.1;
 void fragment() {
   vec2 DuDv_UV = UV * DuDvFactor; // Determine the UV that we use to look up our DuDv
   DuDv_UV += TIME * time_factor; // add some animation
-  
+
   vec2 offset = texture(DuDvMap, DuDv_UV).rg; // Get our offset
   offset = offset * 2.0 - 1.0; // Convert from 0.0 <=> 1.0 to -1.0 <=> 1.0
   offset *= DuDvAmplitude; // And apply our amplitude
-  
+
   vec2 adjusted_uv = UV * tile_factor; // Determine the UV for our texture lookup
   adjusted_uv.y *= aspect_ratio; // Apply aspect ratio
   adjusted_uv += offset; // Distort using our DuDv offset
-  
+
   COLOR = texture(TEXTURE, adjusted_uv); // And lookup our color
 }
 ```
@@ -294,15 +294,15 @@ uniform float DuDvAmplitude = 0.1;
 void fragment() {
   vec2 DuDv_UV = UV * DuDvFactor; // Determine the UV that we use to look up our DuDv
   DuDv_UV += TIME * time_factor; // add some animation
-  
+
   vec2 offset = texture(DuDvMap, DuDv_UV).rg; // Get our offset
   offset = offset * 2.0 - 1.0; // Convert from 0.0 <=> 1.0 to -1.0 <=> 1.0
   offset *= DuDvAmplitude; // And apply our amplitude
-  
+
   vec2 adjusted_uv = UV * tile_factor; // Determine the UV for our texture lookup
   adjusted_uv.y *= aspect_ratio; // Apply aspect ratio
   adjusted_uv += offset; // Distort using our DuDv offset
-  
+
   COLOR = texture(TEXTURE, adjusted_uv); // And lookup our color
   NORMALMAP = texture(NORMAL_TEXTURE, DuDv_UV).rgb;
 }
@@ -314,14 +314,3 @@ Now the effect is a little hard to see because our texture is already relatively
 COLOR = vec4(0.3, 0.3, 0.3, 1.0);
 ```
 Using a single color for our output really shows how the light gets rippled in sync with our distortion.
-
-
-
-
-
-
-
-
-
-
-

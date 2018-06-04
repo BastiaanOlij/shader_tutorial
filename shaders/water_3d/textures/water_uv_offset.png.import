@@ -8,7 +8,10 @@ path.etc2="res://.import/water_uv_offset.png-b30639fd1b1bfb9f39d0c00e524c08bf.et
 [deps]
 
 source_file="res://shaders/water_3d/textures/water_uv_offset.png"
+source_md5="90b43e2113aecd212e6e7f3a0422a125"
+
 dest_files=[ "res://.import/water_uv_offset.png-b30639fd1b1bfb9f39d0c00e524c08bf.s3tc.stex", "res://.import/water_uv_offset.png-b30639fd1b1bfb9f39d0c00e524c08bf.etc2.stex" ]
+dest_md5="144da888c1105aebde3881d7dd738b41"
 
 [params]
 

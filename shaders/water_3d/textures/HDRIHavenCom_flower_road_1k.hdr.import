@@ -7,7 +7,10 @@ path="res://.import/HDRIHavenCom_flower_road_1k.hdr-d794d0636d01afd58fea6714061a
 [deps]
 
 source_file="res://shaders/water_3d/textures/HDRIHavenCom_flower_road_1k.hdr"
+source_md5="e528f3794ef125b2066350f238f2e83f"
+
 dest_files=[ "res://.import/HDRIHavenCom_flower_road_1k.hdr-d794d0636d01afd58fea6714061a74e2.stex" ]
+dest_md5="f716fc1b6edfe944dd2a805e63cd3d6f"
 
 [params]
 

@@ -2,12 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/light.png-06e94102f0cce323cff7daad56cf3030.stex"
+path="res://.import/light.png-e7dddea84bd62358f725f9b4f9019f04.stex"
 
 [deps]
 
-source_file="res://light.png"
-dest_files=[ "res://.import/light.png-06e94102f0cce323cff7daad56cf3030.stex" ]
+source_file="res://shaders/water/textures/light.png"
+source_md5="3e2d10c23968fc568e775b69b6717e4b"
+
+dest_files=[ "res://.import/light.png-e7dddea84bd62358f725f9b4f9019f04.stex" ]
+dest_md5="69ca276228fee032ff4b170d31919b4d"
 
 [params]
 
