@@ -8,10 +8,7 @@ path.etc2="res://.import/TexturesCom_TilesPlain0016_1_seamless_N.png-b9b454fbad7
 [deps]
 
 source_file="res://shaders/water_3d/textures/TexturesCom_TilesPlain0016_1_seamless_N.png"
-source_md5="7a5f29fd200d1fae158c8add608fa89c"
-
 dest_files=[ "res://.import/TexturesCom_TilesPlain0016_1_seamless_N.png-b9b454fbad7d65eaa47bea17b44c944c.s3tc.stex", "res://.import/TexturesCom_TilesPlain0016_1_seamless_N.png-b9b454fbad7d65eaa47bea17b44c944c.etc2.stex" ]
-dest_md5="27b485025235006c86dd3a18c1ade084"
 
 [params]
 

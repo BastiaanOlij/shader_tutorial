@@ -8,10 +8,7 @@ path.etc2="res://.import/water_normal.png-1411750d68634b52c664dbcae056862d.etc2.
 [deps]
 
 source_file="res://shaders/water_3d/textures/water_normal.png"
-source_md5="d2c9dbd5b3d1a637a716cb3ef13aa567"
-
 dest_files=[ "res://.import/water_normal.png-1411750d68634b52c664dbcae056862d.s3tc.stex", "res://.import/water_normal.png-1411750d68634b52c664dbcae056862d.etc2.stex" ]
-dest_md5="b78afc4b4fa7f1bda7cbfd3ac65bbfe0"
 
 [params]
 

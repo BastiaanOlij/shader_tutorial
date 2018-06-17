@@ -11,7 +11,7 @@ config_version=3
 [application]
 
 config/name="Shader tutorial"
-run/main_scene="res://Shaders.tscn"
+run/main_scene="res://shaders/water_3d/displacement_offset_textured/displacement_offset_textured_3d.tscn"
 config/icon="res://icon.png"
 
 [rendering]
